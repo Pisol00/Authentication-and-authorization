@@ -1,0 +1,52 @@
+# Development environment: `docker compose up` starts PostgreSQL, the API and the web app with hot reload.
+#   Web  → http://localhost:5173
+#   API  → http://localhost:4000/api
+#   DB   → localhost:5432 (user/password: postgres/1234, database: authsystem)
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1234"   # quoted so YAML keeps it a string
+      POSTGRES_DB: authsystem
+    ports:
+      - "5432:5432"             # also lets a backend running outside Docker connect via localhost
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # data survives `docker compose down` (use `down -v` to wipe)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d authsystem"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app        # live source (and backend/.env) from the host
+      - /app/node_modules     # keep the container's Linux node_modules, don't use the host's
+    environment:
+      # Inside Docker the database host is the service name "db", not localhost.
+      # (Overrides DATABASE_URL from backend/.env — Node's --env-file never overrides real env vars.)
+      DATABASE_URL: postgres://postgres:1234@db:5432/authsystem
+      CLIENT_URL: http://localhost:5173
+    depends_on:
+      db:
+        condition: service_healthy   # wait until Postgres accepts connections
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      # The browser (on your machine) calls the API, so this is the host URL, not "backend".
+      VITE_API_URL: http://localhost:4000/api
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
