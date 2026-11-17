@@ -2,7 +2,7 @@
 
 Full-stack authentication and role-based authorization example.
 
-- **Backend:** Express 5, TypeScript, PostgreSQL (`pg`), JWT in an httpOnly cookie, bcrypt, zod
+- **Backend:** Express 5, TypeScript, PostgreSQL, JWT, bcrypt, zod
 - **Frontend:** React 19, Vite, TypeScript, Tailwind CSS v4, shadcn/ui, motion, axios
 
 ## Screenshots
