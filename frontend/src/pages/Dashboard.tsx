@@ -11,7 +11,7 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <AnimatedPage className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-12">
+    <AnimatedPage className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
       <h1 className="text-xl font-semibold tracking-tight break-words sm:text-2xl">Hi, {user.name.split(' ')[0]}</h1>
       <p className="mt-1 text-muted-foreground">Here&apos;s your account at a glance.</p>
 

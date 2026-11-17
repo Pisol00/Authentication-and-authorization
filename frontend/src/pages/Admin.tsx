@@ -43,7 +43,7 @@ export default function Admin() {
   };
 
   return (
-    <AnimatedPage className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-12">
+    <AnimatedPage className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
       <div className="flex items-end justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Users</h1>

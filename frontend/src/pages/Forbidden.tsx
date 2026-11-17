@@ -5,7 +5,7 @@ import { AnimatedPage } from '@/components/Motion';
 
 export default function Forbidden() {
   return (
-    <AnimatedPage className="flex min-h-[calc(100dvh-3.5rem)] flex-col items-center justify-center px-4 py-6 text-center sm:py-12">
+    <AnimatedPage className="flex min-h-[calc(100dvh-4rem)] flex-col items-center justify-center px-4 py-6 text-center sm:py-12">
       <p className="font-mono text-sm text-muted-foreground">403</p>
       <h1 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">Access denied</h1>
       <p className="mt-1.5 text-muted-foreground">You don&apos;t have permission to view this page.</p>

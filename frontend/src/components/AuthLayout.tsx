@@ -25,7 +25,7 @@ export default function AuthLayout(p: Props) {
   const shownError = useLastMessage(p.error);
   return (
     // Card centered on every screen size; less padding on phones.
-    <AnimatedPage className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center px-4 py-6 sm:py-12">
+    <AnimatedPage className="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-4 py-6 sm:py-12">
       <Card className="w-full max-w-sm sm:[--card-spacing:--spacing(6)]">
         <CardHeader className="text-center">
           <div className="mb-2 flex justify-center"><LogoMark /></div>
