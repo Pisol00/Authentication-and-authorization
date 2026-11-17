@@ -7,17 +7,14 @@ Full-stack authentication and role-based authorization example.
 
 ## Screenshots
 
-| Login | Dashboard + account menu |
-|---|---|
-| ![Login](docs/screenshots/login.png) | ![Dashboard with the account menu open](docs/screenshots/account-menu.png) |
-
-**Users (admin)**
-
-![Users page with role select](docs/screenshots/users.png)
-
-<p>
-  <img src="docs/screenshots/mobile-login.png" width="240" alt="Login on mobile">
-  <img src="docs/screenshots/mobile-users.png" width="240" alt="Users page on mobile">
+<p align="center">
+  <img src="docs/screenshots/login.png" width="48%" alt="Login">
+  <img src="docs/screenshots/account-menu.png" width="48%" alt="Dashboard with the account menu open">
+</p>
+<p align="center">
+  <img src="docs/screenshots/users.png" width="59%" alt="Users page (admin)">
+  <img src="docs/screenshots/mobile-login.png" width="17%" alt="Login on mobile">
+  <img src="docs/screenshots/mobile-users.png" width="17%" alt="Users page on mobile">
 </p>
 
 ## Quick start
