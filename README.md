@@ -161,7 +161,7 @@ frontend/
       AuthLayout.tsx     card layout for login and register
       PasswordInput.tsx  InputGroup + show/hide eye button
       FormField.tsx      label + input + inline error (shadcn Field)
-      UserAvatar.tsx, RoleBadge.tsx, LogoMark.tsx, PageSpinner.tsx, Motion.tsx
+      UserAvatar.tsx, LogoMark.tsx, PageSpinner.tsx, Motion.tsx
     lib/utils.ts         cn() helper for merging class names
     lib/validation.ts    zod form schemas (same rules as the backend)
     pages/               Login, Register, Logout, Dashboard, Admin, Forbidden
