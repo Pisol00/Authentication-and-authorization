@@ -5,6 +5,21 @@ Full-stack authentication and role-based authorization example.
 - **Backend:** Express 5, TypeScript, PostgreSQL (`pg`), JWT in an httpOnly cookie, bcrypt, zod
 - **Frontend:** React 19, Vite, TypeScript, Tailwind CSS v4, shadcn/ui, motion, axios
 
+## Screenshots
+
+| Login | Dashboard + account menu |
+|---|---|
+| ![Login](docs/screenshots/login.png) | ![Dashboard with the account menu open](docs/screenshots/account-menu.png) |
+
+**Users (admin)**
+
+![Users page with role select](docs/screenshots/users.png)
+
+<p>
+  <img src="docs/screenshots/mobile-login.png" width="240" alt="Login on mobile">
+  <img src="docs/screenshots/mobile-users.png" width="240" alt="Users page on mobile">
+</p>
+
 ## Quick start
 
 **Docker** (PostgreSQL + API + web app, hot reload):
