@@ -63,10 +63,10 @@ export default function Admin() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-4">User</TableHead>
+              <TableHead className="px-3 sm:px-4">User</TableHead>
               {/* Hidden on phones; the date moves under the email instead. */}
-              <TableHead className="hidden px-4 sm:table-cell">Joined</TableHead>
-              <TableHead className="px-4 text-right">Role</TableHead>
+              <TableHead className="hidden px-3 sm:px-4 sm:table-cell">Joined</TableHead>
+              <TableHead className="px-3 sm:px-4 text-right">Role</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -77,12 +77,13 @@ export default function Admin() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: Math.min(i, 10) * 0.03 }}
               >
-                <TableCell className="px-4 py-3">
+                <TableCell className="px-3 sm:px-4 py-3">
                   <div className="flex items-center gap-3">
                     <UserAvatar name={u.name} />
                     {/* A max width lets `truncate` work inside a table cell, so a long email
-                        can't push the table wider than a phone screen. */}
-                    <div className="min-w-0 max-w-[45vw] sm:max-w-xs">
+                        can't push the table wider than a phone screen. On phones it is the screen
+                        width minus everything else in the row (padding, avatar, role select ≈ 14rem). */}
+                    <div className="min-w-0 max-w-[calc(100vw-14rem)] sm:max-w-xs">
                       <p className="truncate font-medium">
                         {u.name} {u.id === me?.id && <span className="font-normal text-muted-foreground">(you)</span>}
                       </p>
@@ -91,16 +92,16 @@ export default function Admin() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="hidden px-4 py-3 text-muted-foreground sm:table-cell">
+                <TableCell className="hidden px-3 sm:px-4 py-3 text-muted-foreground sm:table-cell">
                   {formatDate(u.createdAt)}
                 </TableCell>
-                <TableCell className="px-4 py-3 text-right">
+                <TableCell className="px-3 sm:px-4 py-3 text-right">
                   <Select
                     value={u.role}
                     onValueChange={(role) => changeRole(u.id, role as Role)}
                     disabled={u.id === me?.id}
                   >
-                    <SelectTrigger className="ml-auto w-28" aria-label={`Role for ${u.name}`}>
+                    <SelectTrigger className="ml-auto w-24 sm:w-28" aria-label={`Role for ${u.name}`}>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent align="end">
