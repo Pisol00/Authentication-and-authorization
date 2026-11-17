@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FieldGroup } from '@/components/ui/field';
 import { Spinner } from '@/components/ui/spinner';
 import { LogoMark } from '@/components/LogoMark';
+import { AnimatedPage, Collapse, useLastMessage } from '@/components/Motion';
 
 interface Props {
   title: string;
@@ -21,9 +22,10 @@ interface Props {
 
 // Shared card layout for the login and register pages.
 export default function AuthLayout(p: Props) {
+  const shownError = useLastMessage(p.error);
   return (
     // Card centered on every screen size; less padding on phones.
-    <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center px-4 py-6 sm:py-12">
+    <AnimatedPage className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center px-4 py-6 sm:py-12">
       <Card className="w-full max-w-sm sm:[--card-spacing:--spacing(6)]">
         <CardHeader className="text-center">
           <div className="mb-2 flex justify-center"><LogoMark /></div>
@@ -35,12 +37,12 @@ export default function AuthLayout(p: Props) {
           {/* noValidate: skip the browser's own tooltips; fields show zod errors instead */}
           <form onSubmit={p.onSubmit} noValidate>
             <FieldGroup>
-              {p.error && (
+              <Collapse show={!!p.error}>
                 <Alert variant="destructive">
                   <AlertCircleIcon />
-                  <AlertDescription>{p.error}</AlertDescription>
+                  <AlertDescription>{shownError}</AlertDescription>
                 </Alert>
-              )}
+              </Collapse>
               {p.children}
               <Button type="submit" className="w-full" disabled={p.submitting}>
                 {p.submitting && <Spinner />}
@@ -52,6 +54,6 @@ export default function AuthLayout(p: Props) {
 
         <CardFooter className="flex-wrap justify-center border-t text-center text-sm text-muted-foreground">{p.footer}</CardFooter>
       </Card>
-    </main>
+    </AnimatedPage>
   );
 }

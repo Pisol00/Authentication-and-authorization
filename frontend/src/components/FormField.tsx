@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Collapse, useLastMessage } from '@/components/Motion';
 
 interface Props {
   id: string;
@@ -10,11 +11,14 @@ interface Props {
 
 // Label + input + inline error message, styled by shadcn's Field.
 export function FormField({ id, label, error, children }: Props) {
+  const shownError = useLastMessage(error);
   return (
     <Field data-invalid={error ? true : undefined}>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
       {children}
-      {error && <FieldError id={`${id}-error`}>{error}</FieldError>}
+      <Collapse show={!!error}>
+        <FieldError id={`${id}-error`}>{shownError}</FieldError>
+      </Collapse>
     </Field>
   );
 }

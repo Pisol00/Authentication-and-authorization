@@ -3,6 +3,7 @@ import { RoleBadge } from '@/components/RoleBadge';
 import { UserAvatar } from '@/components/UserAvatar';
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { AnimatedPage } from '@/components/Motion';
 
 export default function Dashboard() {
   // `user` was already loaded by AuthContext (/auth/me on page load) — no extra request here.
@@ -10,7 +11,7 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-12">
+    <AnimatedPage className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-12">
       <h1 className="text-xl font-semibold tracking-tight break-words sm:text-2xl">Hi, {user.name.split(' ')[0]}</h1>
       <p className="mt-1 text-muted-foreground">Here&apos;s your account at a glance.</p>
 
@@ -41,6 +42,6 @@ export default function Dashboard() {
           </dl>
         </CardContent>
       </Card>
-    </main>
+    </AnimatedPage>
   );
 }

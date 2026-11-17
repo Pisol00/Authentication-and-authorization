@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { AlertCircleIcon } from 'lucide-react';
+import * as m from 'motion/react-m';
 import { usersApi } from '@/api/auth';
 import { getErrorMessage } from '@/api/client';
 import { useAuth } from '@/context/AuthContext';
 import { UserAvatar } from '@/components/UserAvatar';
+import { AnimatedPage, Collapse, useLastMessage } from '@/components/Motion';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -15,12 +17,16 @@ const ROLE_OPTIONS: { value: Role; label: string }[] = [
   { value: 'admin', label: 'Admin' },
 ];
 
+// TableRow that can animate (rows fade in one after another).
+const MotionTableRow = m.create(TableRow);
+
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { dateStyle: 'medium' });
 
 export default function Admin() {
   const { user: me } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState('');
+  const shownError = useLastMessage(error);
 
   useEffect(() => {
     usersApi.list().then(setUsers).catch((e) => setError(getErrorMessage(e)));
@@ -37,7 +43,7 @@ export default function Admin() {
   };
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-12">
+    <AnimatedPage className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-12">
       <div className="flex items-end justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Users</h1>
@@ -46,12 +52,12 @@ export default function Admin() {
         <span className="text-sm text-muted-foreground">{users.length} total</span>
       </div>
 
-      {error && (
+      <Collapse show={!!error}>
         <Alert variant="destructive" className="mt-6">
           <AlertCircleIcon />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{shownError}</AlertDescription>
         </Alert>
-      )}
+      </Collapse>
 
       <Card className="mt-6 py-0 sm:mt-8">
         <Table>
@@ -64,8 +70,13 @@ export default function Admin() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((u) => (
-              <TableRow key={u.id}>
+            {users.map((u, i) => (
+              <MotionTableRow
+                key={u.id}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: Math.min(i, 10) * 0.03 }}
+              >
                 <TableCell className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <UserAvatar name={u.name} />
@@ -99,11 +110,11 @@ export default function Admin() {
                     </SelectContent>
                   </Select>
                 </TableCell>
-              </TableRow>
+              </MotionTableRow>
             ))}
           </TableBody>
         </Table>
       </Card>
-    </main>
+    </AnimatedPage>
   );
 }

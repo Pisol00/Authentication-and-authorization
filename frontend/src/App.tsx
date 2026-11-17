@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { LazyMotion, MotionConfig } from 'motion/react';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -7,6 +8,9 @@ import { PageSpinner } from '@/components/PageSpinner';
 
 // Code splitting: each page is its own JS file, downloaded only when that route is opened.
 // (Navbar, ProtectedRoute and AuthContext are on every page, so they stay in the main bundle.)
+// Animation engine for <m.*> components, downloaded after the first paint (see lib/motion-features.ts).
+const loadMotionFeatures = () => import('@/lib/motion-features').then((mod) => mod.default);
+
 const Login = lazy(() => import('@/pages/Login'));
 const Register = lazy(() => import('@/pages/Register'));
 const Logout = lazy(() => import('@/pages/Logout'));
@@ -16,6 +20,10 @@ const Forbidden = lazy(() => import('@/pages/Forbidden'));
 
 export default function App() {
   return (
+    // reducedMotion="user": no movement for people who turned on "Reduce motion" in their OS.
+    <MotionConfig reducedMotion="user">
+    {/* strict: using the full-size `motion.*` instead of `m.*` throws, so the bundle stays small. */}
+    <LazyMotion features={loadMotionFeatures} strict>
     <BrowserRouter>
       <AuthProvider>
         <Navbar />
@@ -43,5 +51,7 @@ export default function App() {
         </Suspense>
       </AuthProvider>
     </BrowserRouter>
+    </LazyMotion>
+    </MotionConfig>
   );
 }
