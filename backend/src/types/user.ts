@@ -8,7 +8,7 @@ export interface User {
   email: string;
   passwordHash: string;
   role: Role;
-  createdAt: Date; // sent to the client as an ISO string by res.json()
+  createdAt: Date; // sent to the client as an ISO string (JSON)
 }
 
 // What the API is allowed to return: never the password hash.

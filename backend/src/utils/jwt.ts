@@ -12,7 +12,11 @@ export function signToken(user: PublicUser): string {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
-// Throws if the token is invalid or expired.
-export function verifyToken(token: string): JwtPayload {
-  return jwt.verify(token, JWT_SECRET) as unknown as JwtPayload;
+// undefined when the token is invalid or expired (jsonwebtoken throws; we turn that into a value).
+export function verifyToken(token: string): JwtPayload | undefined {
+  try {
+    return jwt.verify(token, JWT_SECRET) as unknown as JwtPayload;
+  } catch {
+    return undefined;
+  }
 }
