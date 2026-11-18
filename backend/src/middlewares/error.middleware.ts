@@ -3,7 +3,7 @@ import { respond } from '../utils/respond.js';
 
 // After all routes: no route matched.
 export function notFound(_req: Request, res: Response) {
-  respond.error(res, 404, 'Not found');
+  respond.notFound(res, 'Not found');
 }
 
 // Last resort for errors thrown before a controller runs, e.g. express.json() on a malformed body.
@@ -11,7 +11,7 @@ export function notFound(_req: Request, res: Response) {
 // The 4 parameters are what tell Express this is an error handler.
 export function errorHandler(error: unknown, _req: Request, res: Response, _next: NextFunction) {
   if ((error as { type?: string }).type === 'entity.parse.failed') {
-    return respond.error(res, 400, 'Invalid request body');
+    return respond.badRequest(res, 'Invalid request body');
   }
-  respond.unexpected(res, error);
+  respond.serverError(res, error);
 }

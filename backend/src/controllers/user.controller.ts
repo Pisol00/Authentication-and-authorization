@@ -10,26 +10,26 @@ export const userController = {
     try {
       respond.ok(res, { users: await userService.list() });
     } catch (unexpected) {
-      respond.unexpected(res, unexpected);
+      respond.serverError(res, unexpected);
     }
   },
 
   async updateRole(req: Request, res: Response) {
     try {
       const params = userIdParamSchema.safeParse(req.params);
-      if (!params.success) return respond.invalid(res, params.error);
+      if (!params.success) return respond.unprocessable(res, params.error);
       const body = updateRoleSchema.safeParse(req.body ?? {});
-      if (!body.success) return respond.invalid(res, body.error);
+      if (!body.success) return respond.unprocessable(res, body.error);
 
       // Stops the last admin from locking everyone out by demoting themselves.
-      if (params.data.id === req.user!.id) return respond.error(res, 400, 'You cannot change your own role');
+      if (params.data.id === req.user!.id) return respond.forbidden(res, 'You cannot change your own role');
 
       const user = await userService.changeRole(params.data.id, body.data.role);
-      if (!user) return respond.error(res, 404, 'User not found');
+      if (!user) return respond.notFound(res, 'User not found');
 
       respond.ok(res, { user });
     } catch (unexpected) {
-      respond.unexpected(res, unexpected);
+      respond.serverError(res, unexpected);
     }
   },
 };

@@ -1,4 +1,4 @@
-// Every rejection is `return respond.error(...)`: the `return` stops next() from running after
+// Every rejection is `return respond.unauthorized(...)` / `forbidden(...)`: the `return` stops next() from running after
 // the response was already sent.
 import type { NextFunction, Request, Response } from 'express';
 import { AUTH_COOKIE } from '../config/env.js';
@@ -16,23 +16,23 @@ export function requireAuth(...roles: Role[]) {
     try {
       // Who is making this request? The JWT lives in the httpOnly cookie.
       const token: unknown = req.cookies?.[AUTH_COOKIE];
-      if (typeof token !== 'string' || !token) return respond.error(res, 401, 'Not logged in');
+      if (typeof token !== 'string' || !token) return respond.unauthorized(res, 'Not logged in');
 
       const payload = verifyToken(token);
-      if (!payload) return respond.error(res, 401, 'Invalid or expired session');
+      if (!payload) return respond.unauthorized(res, 'Invalid or expired session');
 
       const user = await userService.findById(payload.sub);
-      if (!user) return respond.error(res, 401, 'User no longer exists');
+      if (!user) return respond.unauthorized(res, 'User no longer exists');
 
       // The role comes from the database, not from the token.
       if (roles.length > 0 && !roles.includes(user.role)) {
-        return respond.error(res, 403, 'Forbidden: insufficient role');
+        return respond.forbidden(res, 'Forbidden: insufficient role');
       }
 
       req.user = user;
       next();
     } catch (unexpected) {
-      respond.unexpected(res, unexpected);
+      respond.serverError(res, unexpected);
     }
   };
 }

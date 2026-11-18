@@ -58,15 +58,26 @@ Sign-ups always get the `user` role. `create-admin` creates an admin, or promote
 | GET | `/api/users` | admin |
 | PATCH | `/api/users/:id/role` | admin |
 
-Errors are `{ "message": "..." }` with `400` invalid input, `401` not logged in, `403` wrong role, `404` not found, `409` email taken.
+Errors are `{ "message": "..." }`:
+
+| Status | When |
+|---|---|
+| `400` | the body isn't valid JSON |
+| `401` | not logged in, session expired, or wrong email/password |
+| `403` | wrong role, or an admin changing their own role |
+| `404` | no such route or user |
+| `409` | email already registered |
+| `422` | input fails validation (message says which field) |
+| `500` | something unexpected, e.g. the database is down |
 
 ## How it works
 
 - **Login** sets a JWT in an `HttpOnly; SameSite=Lax` cookie. JavaScript never sees the token.
-- **`authenticate`** verifies the cookie and loads the user from the database. **`authorize('admin')`** checks the role.
+- **`requireAuth()`** verifies the cookie and loads the user from the database. **`requireAuth('admin')`** also checks the role (401 not logged in → 403 wrong role).
 - **Frontend** calls `/auth/me` once per page load to restore the session; a `401` from any other API logs the user out.
 - **IDs** are UUIDs. Emails are unique and stored in lowercase.
-- **Validation** rules live in `backend/src/validations/` and are copied in `frontend/src/lib/validation.ts`. Change both together.
+- **Validation** rules live in `backend/src/validations/` and are copied in `frontend/src/lib/validation.ts`. Change both together. Controllers check their input first with `schema.safeParse(req.body)`.
+- **Services return data, controllers pick the status.** A service returns the user or `undefined`; the controller turns that into a response with `respond.notFound(...)`, `respond.conflict(...)` and so on (`utils/respond.ts`, one function per status). Every controller has a `try/catch` that answers 500 for anything unexpected.
 
 ## Structure
 

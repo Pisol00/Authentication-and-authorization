@@ -17,30 +17,30 @@ export const authController = {
   async register(req: Request, res: Response) {
     try {
       const input = registerSchema.safeParse(req.body ?? {}); // Express 5 leaves req.body undefined without a body
-      if (!input.success) return respond.invalid(res, input.error);
+      if (!input.success) return respond.unprocessable(res, input.error);
 
       const user = await authService.register(input.data);
-      if (!user) return respond.error(res, 409, 'Email already registered');
+      if (!user) return respond.conflict(res, 'Email already registered');
 
       setAuthCookie(res, user);
       respond.created(res, { user });
     } catch (unexpected) {
-      respond.unexpected(res, unexpected);
+      respond.serverError(res, unexpected);
     }
   },
 
   async login(req: Request, res: Response) {
     try {
       const input = loginSchema.safeParse(req.body ?? {});
-      if (!input.success) return respond.invalid(res, input.error);
+      if (!input.success) return respond.unprocessable(res, input.error);
 
       const user = await authService.login(input.data);
-      if (!user) return respond.error(res, 401, 'Invalid email or password');
+      if (!user) return respond.unauthorized(res, 'Invalid email or password');
 
       setAuthCookie(res, user);
       respond.ok(res, { user });
     } catch (unexpected) {
-      respond.unexpected(res, unexpected);
+      respond.serverError(res, unexpected);
     }
   },
 
@@ -51,7 +51,7 @@ export const authController = {
       res.clearCookie(AUTH_COOKIE, authCookieOptions);
       respond.noContent(res);
     } catch (unexpected) {
-      respond.unexpected(res, unexpected);
+      respond.serverError(res, unexpected);
     }
   },
 
@@ -59,7 +59,7 @@ export const authController = {
     try {
       respond.ok(res, { user: req.user });
     } catch (unexpected) {
-      respond.unexpected(res, unexpected);
+      respond.serverError(res, unexpected);
     }
   },
 };
